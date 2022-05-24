@@ -1,11 +1,11 @@
 import React from 'react';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth, db } from '../firebase';
-import { setDoc, doc, Timestamp } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import googleLogo from '../assets/google-logo.svg';
 
-const Registration = () => {
+const Login = () => {
     const navigation = useNavigate();
 
     //Google
@@ -13,11 +13,7 @@ const Registration = () => {
     const googleRegister = () => {
         signInWithPopup(auth, provider)
             .then((result) => {
-                setDoc(doc(db, 'users', result.user.uid), {
-                    uid: result.user.uid,
-                    name: result.user.displayName,
-                    email: result.user.email,
-                    createdAt: Timestamp.fromDate(new Date()),
+                updateDoc(doc(db, 'users', result.user.uid), {
                     isOnline: true
                 })
                 navigation('/');
@@ -37,7 +33,6 @@ const Registration = () => {
     }
     //Email & Password
     const [data, setData] = React.useState({
-        name: '',
         email: '',
         password: '',
         error: null,
@@ -45,7 +40,7 @@ const Registration = () => {
     });
 
 
-    const { name, email, password, error, loading } = data;
+    const { email, password, error, loading } = data;
 
     const changeInput = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
@@ -54,21 +49,17 @@ const Registration = () => {
     const registration = async (e) => {
         e.preventDefault();
         setData({ ...data, error: null, loading: true })
-        if (!name || !email || !password) {
+        if (!email || !password) {
             setData({ ...data, error: 'Все поля обязательны для заполнения!' });
         }
         try {
-            const result = await createUserWithEmailAndPassword(auth, email, password);
+            const result = await signInWithEmailAndPassword(auth, email, password);
             // console.log(result.user)
-            await setDoc(doc(db, 'users', result.user.uid), {
-                uid: result.user.uid,
-                name,
-                email,
-                createdAt: Timestamp.fromDate(new Date()),
+            await updateDoc(doc(db, 'users', result.user.uid), {
                 isOnline: true
             });
             //firebase.firestore().collection('users').doc(id).set({}) erlier
-            setData({ name: '', email: '', password: '', error: null, loading: false })
+            setData({ email: '', password: '', error: null, loading: false })
             navigation('/');
         } catch (err) {
             setData({ ...data, error: err.message, loading: false })
@@ -77,15 +68,8 @@ const Registration = () => {
 
     return (
         <section>
-            <h3>Create An Account</h3>
+            <h3>Log into your Account</h3>
             <form className='form' onSubmit={registration}>
-                <div className="input_container">
-                    <label htmlFor="name">Name</label>
-                    <input type="text" name='name'
-                        value={name}
-                        onChange={changeInput}
-                    />
-                </div>
                 <div className="input_container">
                     <label htmlFor="email">Email</label>
                     <input type="email" name='email'
@@ -103,7 +87,7 @@ const Registration = () => {
                 {error ? <p className="error">{error}</p> : null}
                 <div className="btn_container">
                     <button className="btn" disabled={loading}>
-                        {loading ? 'Create new account ...' : 'Registration'}
+                        {loading ? 'Logining in ...' : 'Login'}
                     </button>
                 </div>
             </form>
@@ -112,11 +96,11 @@ const Registration = () => {
             <div className='google_container'>
                 <button className="btn google_btn" onClick={googleRegister}>
                     <img className='google_logo' src={googleLogo} alt="google-logo" />
-                    Auth from Google</button>
+                    Login with Google</button>
             </div>
 
         </section>
     )
 }
 
-export default Registration
+export default Login;

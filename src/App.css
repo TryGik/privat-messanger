@@ -352,3 +352,20 @@ section .form {
     max-width: 100%;
   }
 }
+
+/*Google Logo*/
+.google_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.google_logo {
+  width: 30px;
+  height: 30px;
+  transform: translateY(8px);
+}
+
+.google_btn {
+  padding-top: 0;
+}
