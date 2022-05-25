@@ -1,9 +1,10 @@
 import React from 'react';
-import { collection, query, where, onSnapshot, addDoc, Timestamp } from "firebase/firestore";
+import { collection, query, where, onSnapshot, addDoc, Timestamp, orderBy } from "firebase/firestore";
 import { db, auth, storage } from '../firebase';
 import User from '../components/User';
 import MessageForm from '../components/MessageForm';
 import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
+import Message from '../components/Message';
 
 //getDoc use only once, than have to use onSnapshot
 const Home = () => {
@@ -18,7 +19,8 @@ const Home = () => {
     const [users, setUsers] = React.useState([]);
     const [user, setUser] = React.useState('');
     const [text, setText] = React.useState('');
-    const [img, setImg] = React.useState('')
+    const [img, setImg] = React.useState('');
+    const [messages, setMessages] = React.useState([]);
 
     const user1 = auth.currentUser.uid;
 
@@ -41,7 +43,20 @@ const Home = () => {
     const selectUser = (user) => {
         setUser(user);
         // console.log(user);
+
+        const user2 = user.uid
+        const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
+        const messagesRef = collection(db, 'messages', id, 'chat');
+        const q = query(messagesRef, orderBy('createdAt', 'asc'));
+        onSnapshot(q, querySnapshot => {
+            let messages = [];
+            querySnapshot.forEach((doc) => {
+                messages.push(doc.data());
+            });
+            setMessages(messages);
+        });
     }
+    console.log(messages);
 
     //create messages
     const handleSubmit = async (e) => {
@@ -81,6 +96,9 @@ const Home = () => {
                     <>
                         <div className='messages_user'>
                             <h3>{user.name}</h3>
+                        </div>
+                        <div className="messages">
+                            {messages.length ? messages.map((el, i) => <Message key={i} message={el} user1={user1} />) : null}
                         </div>
                         <MessageForm handleSubmit={handleSubmit}
                             text={text}
