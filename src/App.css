@@ -485,3 +485,10 @@ section .form {
 .google_btn {
   padding-top: 0;
 }
+
+/*White*/
+
+.white {
+  background-color: #cef;
+  color: rgb(202, 97, 22);
+}

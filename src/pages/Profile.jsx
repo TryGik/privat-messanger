@@ -86,7 +86,7 @@ const Profile = () => {
                     <h3>{user.name}</h3>
                     <p>{user.email}</p>
                     <hr />
-                    <small>Join on : {user.createdAt.toDate().toDateString()}</small>
+                    <small>Присоединился : {user.createdAt.toDate().toDateString()}</small>
                 </div>
             </div>
         </section>

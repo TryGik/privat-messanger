@@ -110,7 +110,7 @@ const Login = () => {
                 {error ? <p className="error">{error}</p> : null}
                 <div className="btn_container">
                     <button className="btn" disabled={loading}>
-                        {loading ? 'Вход ждите...' : 'Войти'}
+                        {loading ? 'Ожидайте...' : 'Войти'}
                     </button>
                 </div>
             </form>

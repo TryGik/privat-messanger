@@ -21,18 +21,41 @@ import MessageForm from '../components/MessageForm';
 //getDoc use only once, than have to use onSnapshot
 const Home = () => {
 
-    // const fn = async (id) => {
-    //     const docSnap = await getDoc(doc(db, 'users', id))
-    //     console.log(docSnap.data().uid)
-    // }
-    // console.log(fn('RC8WvnJh9HOaMblXs4SOvRLPAmU'))
-
     /*const q = query(collection(db, "cities"), where("capital", "==", true));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    console.log(doc.id, " => ", doc.data());
 });*/
+
+    //
+    const [bg, setBg] = React.useState(false);
+
+    React.useEffect(() => {
+        // const id = 'bg-for-per';
+        // getDoc(doc(db, 'background', id)).then((docSnap) => {
+        //     if (docSnap.exists) {
+        //         // console.log(docSnap.data().sun)
+        //         setBg(docSnap.data().sun)
+        //         // console.log(bg)
+        //     }
+        // })
+        //опять забыл лисанером является снапшот, а не гетдок
+        const backgroundRef = collection(db, 'background');
+        //создаем обьект запроса не включая юзера1
+        const q = query(backgroundRef)
+        //достаем запрос
+        const unsub = onSnapshot(q, querySnapshot => {
+            let bg;
+            querySnapshot.forEach((doc) => {
+                bg = doc.data().sun;
+            });
+            setBg(bg);
+        });
+        return () => unsub();
+    }, [])
+    console.log(bg)
+    //
 
     const [users, setUsers] = React.useState([]);
     const [user, setUser] = React.useState('');
@@ -126,7 +149,7 @@ const Home = () => {
     }
 
     return (
-        <div className='home_container'>
+        <div className={`home_container ${bg ? 'white' : ''}`}>
             <div className="users_container">
                 {users.map(item =>
                     <User
