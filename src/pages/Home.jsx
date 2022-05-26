@@ -21,11 +21,11 @@ import MessageForm from '../components/MessageForm';
 //getDoc use only once, than have to use onSnapshot
 const Home = () => {
 
-    const fn = async (id) => {
-        const docSnap = await getDoc(doc(db, 'users', id))
-        console.log(docSnap.data().uid)
-    }
-    console.log(fn('RC8WvnJh9HOaMblXs4SOvRLPAmU'))
+    // const fn = async (id) => {
+    //     const docSnap = await getDoc(doc(db, 'users', id))
+    //     console.log(docSnap.data().uid)
+    // }
+    // console.log(fn('RC8WvnJh9HOaMblXs4SOvRLPAmU'))
 
     /*const q = query(collection(db, "cities"), where("capital", "==", true));
       const querySnapshot = await getDocs(q);

@@ -1,40 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { setDoc, doc, Timestamp } from 'firebase/firestore';
-import googleLogo from '../assets/google-logo.svg';
+// import googleLogo from '../assets/google-logo.svg';
 
 const Registration = () => {
     const navigation = useNavigate();
 
     //Google
-    const provider = new GoogleAuthProvider();
-    const googleRegister = () => {
-        signInWithPopup(auth, provider)
-            .then((result) => {
-                setDoc(doc(db, 'users', result.user.uid), {
-                    uid: result.user.uid,
-                    name: result.user.displayName,
-                    email: result.user.email,
-                    createdAt: Timestamp.fromDate(new Date()),
-                    isOnline: true
-                })
-                navigation('/');
-            }).catch((error) => {
-                // Handle Errors here.
-                const errorCode = error.code;
-                alert(errorCode);
-                const errorMessage = error.message;
-                alert(errorMessage);
-                // The email of the user's account used.
-                const email = error.customData.email;
-                alert(email);
-                // The AuthCredential type that was used.
-                const credential = GoogleAuthProvider.credentialFromError(error);
-                alert(credential);
-            });
-    }
+
     //Email & Password
     const [data, setData] = React.useState({
         name: '',
@@ -103,17 +78,17 @@ const Registration = () => {
                 {error ? <p className="error">{error}</p> : null}
                 <div className="btn_container">
                     <button className="btn" disabled={loading}>
-                        {loading ? 'Create new account ...' : 'Registration'}
+                        {loading ? 'Идет регистрация ...' : 'Регистрация'}
                     </button>
                 </div>
             </form>
-            <hr />
+            {/* <hr />
             <div style={{ textAlign: 'center' }}>или</div>
             <div className='google_container'>
                 <button className="btn google_btn" onClick={googleRegister}>
                     <img className='google_logo' src={googleLogo} alt="google-logo" />
                     Auth from Google</button>
-            </div>
+            </div> */}
 
         </section>
     )

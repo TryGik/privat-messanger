@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { doc, updateDoc, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, setDoc, Timestamp } from 'firebase/firestore';
 import googleLogo from '../assets/google-logo.svg';
 
 const Login = () => {
@@ -14,20 +14,45 @@ const Login = () => {
     const googleRegister = () => {
         signInWithPopup(auth, provider)
             .then((result) => {
-                console.log('Result', result)
-                const docSnap = getDoc(doc(db, 'users', result.user.uid));
-                if (docSnap.data()) {
-                    updateDoc(doc(db, 'users', result.user.uid), {
-                        isOnline: true
-                    })
-                    navigation('/');
-                }
-                navigation('/registration');
-                return;
+                setDoc(doc(db, 'users', result.user.uid), {
+                    uid: result.user.uid,
+                    name: result.user.displayName,
+                    email: result.user.email,
+                    createdAt: Timestamp.fromDate(new Date()),
+                    isOnline: true
+                })
+                navigation('/');
             }).catch((error) => {
-                alert('Чтобы пользоваться PRIVATE-MSGR через Google аккаунты, сперва зарегистрируйтесь')
+                // Handle Errors here.
+                const errorCode = error.code;
+                alert(errorCode);
+                const errorMessage = error.message;
+                alert(errorMessage);
+                // The email of the user's account used.
+                const email = error.customData.email;
+                alert(email);
+                // The AuthCredential type that was used.
+                const credential = GoogleAuthProvider.credentialFromError(error);
+                alert(credential);
             });
     }
+
+
+
+    // const provider = new GoogleAuthProvider();
+    // const googleRegister = () => {
+    //     signInWithPopup(auth, provider)
+    //         .then((result) => {
+    //             console.log('Result', result)
+    //             updateDoc(doc(db, 'users', result.user.uid), {
+    //                 isOnline: true
+    //             })
+    //             navigation('/');
+
+    //         }).catch((error) => {
+    //             console.log(error)
+    //         });
+    // }
 
     //Email & Password
     const [data, setData] = React.useState({
@@ -66,7 +91,7 @@ const Login = () => {
 
     return (
         <section>
-            <h3>Log into your Account</h3>
+            <h3>Войти в аккаунт</h3>
             <form className='form' onSubmit={registration}>
                 <div className="input_container">
                     <label htmlFor="email">Email</label>
@@ -76,7 +101,7 @@ const Login = () => {
                     />
                 </div>
                 <div className="input_container">
-                    <label htmlFor="password">Password</label>
+                    <label htmlFor="password">Пароль</label>
                     <input type="password" name='password'
                         value={password}
                         onChange={changeInput}
@@ -85,16 +110,16 @@ const Login = () => {
                 {error ? <p className="error">{error}</p> : null}
                 <div className="btn_container">
                     <button className="btn" disabled={loading}>
-                        {loading ? 'Logining in ...' : 'Login'}
+                        {loading ? 'Вход ждите...' : 'Войти'}
                     </button>
                 </div>
             </form>
             <hr />
-            <div style={{ textAlign: 'center' }}>or</div>
+            <div style={{ textAlign: 'center' }}>или</div>
             <div className='google_container'>
                 <button className="btn google_btn" onClick={googleRegister}>
                     <img className='google_logo' src={googleLogo} alt="google-logo" />
-                    Login with Google</button>
+                    Войти с помощью Google</button>
             </div>
 
         </section>
