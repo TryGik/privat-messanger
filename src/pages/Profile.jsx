@@ -11,30 +11,25 @@ const Profile = () => {
     const navigation = useNavigate();
     const [img, setImg] = React.useState('');
     const [user, setUser] = React.useState();
-    // console.log(img)
+
     React.useEffect(() => {
         getDoc(doc(db, 'users', auth.currentUser.uid)).then((docSnap) => {
             if (docSnap.exists) {
-                // console.log(docSnap.data())
                 setUser(docSnap.data())
             }
         })
         if (img) {
-            //upload Img to Firebase Storage
             const uploadImg = async () => {
                 const imgRef = ref(
                     storage,
                     `avatar/${new Date().getTime()} - ${img.name}`
                 );
                 try {
-                    //delete img from storage
                     if (user.avatarPath) {
                         await deleteObject(ref(storage, user.avatarPath));
                     }
                     const snap = await uploadBytes(imgRef, img);
-                    // console.log(snap.ref.fullPath);
                     const url = await getDownloadURL(ref(storage, snap.ref.fullPath))
-                    // console.log(url)
 
                     await updateDoc(doc(db, 'users', auth.currentUser.uid), {
                         avatar: url,

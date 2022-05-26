@@ -6,6 +6,7 @@ import { doc, updateDoc, setDoc } from 'firebase/firestore';
 import { AuthContext } from '../context/auth';
 import Sun from './svg/Sun';
 import Moon from './svg/Moon';
+import { HOME_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE, REGISTER_ROUTE } from '../utils/consts';
 
 
 const Navbar = () => {
@@ -13,8 +14,7 @@ const Navbar = () => {
     const navigation = useNavigate();
     const [sun, setSun] = React.useState(false)
 
-    //
-
+    //фономенялка
     const changeBackground = async () => {
         const id = 'bg-for-per';
         await setDoc(doc(db, 'background', id), {
@@ -25,9 +25,6 @@ const Navbar = () => {
         });
         setSun(!sun);
     }
-
-    //
-
 
     const handlerSignOut = async () => {
         await updateDoc(doc(db, 'users', auth.currentUser.uid), {
@@ -40,7 +37,7 @@ const Navbar = () => {
     return (
         <nav>
             <h3>
-                <Link to="/">PRIVATE-MSGR</Link>
+                <Link to={HOME_ROUTE}>PRIVATE-MSGR</Link>
             </h3>
             <div onClick={() => changeBackground()}>
                 {sun ?
@@ -51,13 +48,13 @@ const Navbar = () => {
             <div>
                 {user ?
                     <>
-                        <Link to="/profile">Профиль</Link>
+                        <Link to={PROFILE_ROUTE}>Профиль</Link>
                         <button className="btn" onClick={handlerSignOut}>Выйти</button>
                     </>
                     :
                     <>
-                        <Link to='/registration'>Регистрация</Link>
-                        <Link to='/login'>Войти</Link>
+                        <Link to={REGISTER_ROUTE}>Регистрация</Link>
+                        <Link to={LOGIN_ROUTE}>Войти</Link>
                     </>
                 }
             </div>
@@ -66,4 +63,4 @@ const Navbar = () => {
     )
 }
 
-export default Navbar
+export default Navbar;

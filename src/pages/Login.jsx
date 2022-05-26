@@ -9,7 +9,6 @@ const Login = () => {
     const navigation = useNavigate();
 
     //Google
-
     const provider = new GoogleAuthProvider();
     const googleRegister = () => {
         signInWithPopup(auth, provider)
@@ -23,38 +22,19 @@ const Login = () => {
                 })
                 navigation('/');
             }).catch((error) => {
-                // Handle Errors here.
                 const errorCode = error.code;
                 alert(errorCode);
                 const errorMessage = error.message;
                 alert(errorMessage);
-                // The email of the user's account used.
                 const email = error.customData.email;
                 alert(email);
-                // The AuthCredential type that was used.
                 const credential = GoogleAuthProvider.credentialFromError(error);
                 alert(credential);
             });
     }
 
-
-
-    // const provider = new GoogleAuthProvider();
-    // const googleRegister = () => {
-    //     signInWithPopup(auth, provider)
-    //         .then((result) => {
-    //             console.log('Result', result)
-    //             updateDoc(doc(db, 'users', result.user.uid), {
-    //                 isOnline: true
-    //             })
-    //             navigation('/');
-
-    //         }).catch((error) => {
-    //             console.log(error)
-    //         });
-    // }
-
     //Email & Password
+
     const [data, setData] = React.useState({
         email: '',
         password: '',
@@ -77,11 +57,9 @@ const Login = () => {
         }
         try {
             const result = await signInWithEmailAndPassword(auth, email, password);
-            // console.log(result.user)
             await updateDoc(doc(db, 'users', result.user.uid), {
                 isOnline: true
             });
-            //firebase.firestore().collection('users').doc(id).set({}) erlier
             setData({ email: '', password: '', error: null, loading: false })
             navigation('/');
         } catch (err) {

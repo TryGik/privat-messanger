@@ -8,8 +8,6 @@ import { setDoc, doc, Timestamp } from 'firebase/firestore';
 const Registration = () => {
     const navigation = useNavigate();
 
-    //Google
-
     //Email & Password
     const [data, setData] = React.useState({
         name: '',
@@ -34,7 +32,6 @@ const Registration = () => {
         }
         try {
             const result = await createUserWithEmailAndPassword(auth, email, password);
-            // console.log(result.user)
             await setDoc(doc(db, 'users', result.user.uid), {
                 uid: result.user.uid,
                 name,
@@ -42,7 +39,6 @@ const Registration = () => {
                 createdAt: Timestamp.fromDate(new Date()),
                 isOnline: true
             });
-            //firebase.firestore().collection('users').doc(id).set({}) erlier
             setData({ name: '', email: '', password: '', error: null, loading: false })
             navigation('/');
         } catch (err) {
@@ -82,16 +78,8 @@ const Registration = () => {
                     </button>
                 </div>
             </form>
-            {/* <hr />
-            <div style={{ textAlign: 'center' }}>или</div>
-            <div className='google_container'>
-                <button className="btn google_btn" onClick={googleRegister}>
-                    <img className='google_logo' src={googleLogo} alt="google-logo" />
-                    Auth from Google</button>
-            </div> */}
-
         </section>
     )
 }
 
-export default Registration
+export default Registration;

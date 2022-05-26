@@ -1,8 +1,7 @@
 import React from 'react';
 import Moment from 'react-moment';
-//npm i moment react-moment
+
 const Message = ({ message, user1 }) => {
-    //useRef use for scroll that it auto go down when you write a msg
     const scrollRef = React.useRef();
 
     React.useEffect(() => {

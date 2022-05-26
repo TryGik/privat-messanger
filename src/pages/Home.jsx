@@ -18,33 +18,19 @@ import User from '../components/User';
 import Message from '../components/Message';
 import MessageForm from '../components/MessageForm';
 
-//getDoc use only once, than have to use onSnapshot
 const Home = () => {
-
-    /*const q = query(collection(db, "cities"), where("capital", "==", true));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data());
-});*/
-
-    //
+    const [users, setUsers] = React.useState([]);
+    const [user, setUser] = React.useState('');
+    const [text, setText] = React.useState('');
+    const [img, setImg] = React.useState('');
+    const [messages, setMessages] = React.useState([]);
     const [bg, setBg] = React.useState(false);
 
+    const user1 = auth.currentUser.uid;
+
     React.useEffect(() => {
-        // const id = 'bg-for-per';
-        // getDoc(doc(db, 'background', id)).then((docSnap) => {
-        //     if (docSnap.exists) {
-        //         // console.log(docSnap.data().sun)
-        //         setBg(docSnap.data().sun)
-        //         // console.log(bg)
-        //     }
-        // })
-        //опять забыл лисанером является снапшот, а не гетдок
         const backgroundRef = collection(db, 'background');
-        //создаем обьект запроса не включая юзера1
         const q = query(backgroundRef)
-        //достаем запрос
         const unsub = onSnapshot(q, querySnapshot => {
             let bg;
             querySnapshot.forEach((doc) => {
@@ -54,22 +40,10 @@ const Home = () => {
         });
         return () => unsub();
     }, [])
-    console.log(bg)
-    //
-
-    const [users, setUsers] = React.useState([]);
-    const [user, setUser] = React.useState('');
-    const [text, setText] = React.useState('');
-    const [img, setImg] = React.useState('');
-    const [messages, setMessages] = React.useState([]);
-
-    const user1 = auth.currentUser.uid;
 
     React.useEffect(() => {
         const usersRef = collection(db, 'users');
-        //создаем обьект запроса не включая юзера1
         const q = query(usersRef, where('uid', 'not-in', [user1]))
-        //достаем запрос
         const unsub = onSnapshot(q, querySnapshot => {
             let users = [];
             querySnapshot.forEach((doc) => {
@@ -79,11 +53,9 @@ const Home = () => {
         });
         return () => unsub();
     }, [])
-    // console.log(users);
 
     const selectUser = async (user) => {
         setUser(user);
-        // console.log(user);
 
         const user2 = user.uid
         const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
@@ -96,27 +68,19 @@ const Home = () => {
             });
             setMessages(messages);
         });
-        //'New' message functionality also have trouble whith 2 people, whos start conversation
-        //in this case we get last message beetwen log in user and select user
-        // if (docSnap.data().from !== user1) check exist conv or not
 
         const docSnap = await getDoc(doc(db, 'lastMessage', id))
-        //if last message exist otherwise we will have error also docSnap.data().from !== user1 message belong to select user
         if (docSnap.data() && docSnap.data().from !== user1) {
             await updateDoc(doc(db, 'lastMessage', id), {
                 unread: false,
             })
         }
     }
-    // console.log(messages);
 
-    //create messages
     const handleSubmit = async (e) => {
         e.preventDefault();
         const user2 = user.uid;
-        // messages => id => chat => addDoc()
         const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
-        //add media
         let url;
         if (img) {
             const imgRef = ref(
@@ -135,7 +99,7 @@ const Home = () => {
             createdAt: Timestamp.fromDate(new Date()),
             media: url || '',
         })
-        //создаем последнее сообщение in collection can be only 1 last message
+
         await setDoc(doc(db, 'lastMessage', id), {
             text,
             from: user1,

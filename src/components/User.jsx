@@ -14,7 +14,7 @@ const User = ({ user, selectUser, user1, chat }) => {
         });
         return () => unsub();
     }, [])
-    // console.log(data);
+
     return (
         <div className={`user_wrapper ${chat.name === user.name && 'selected_user'}`}
             onClick={() => selectUser(user)}>
