@@ -1,8 +1,8 @@
 import React from 'react';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth, db } from '../firebase';
-import { setDoc, doc, Timestamp } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import { auth, db } from '../firebase';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { setDoc, doc, Timestamp } from 'firebase/firestore';
 import googleLogo from '../assets/google-logo.svg';
 
 const Registration = () => {
@@ -77,10 +77,10 @@ const Registration = () => {
 
     return (
         <section>
-            <h3>Create An Account</h3>
+            <h3>Создать новый аккаунт</h3>
             <form className='form' onSubmit={registration}>
                 <div className="input_container">
-                    <label htmlFor="name">Name</label>
+                    <label htmlFor="name">Имя</label>
                     <input type="text" name='name'
                         value={name}
                         onChange={changeInput}
@@ -94,7 +94,7 @@ const Registration = () => {
                     />
                 </div>
                 <div className="input_container">
-                    <label htmlFor="password">Password</label>
+                    <label htmlFor="password">Пароль</label>
                     <input type="password" name='password'
                         value={password}
                         onChange={changeInput}
@@ -108,7 +108,7 @@ const Registration = () => {
                 </div>
             </form>
             <hr />
-            <div style={{ textAlign: 'center' }}>or</div>
+            <div style={{ textAlign: 'center' }}>или</div>
             <div className='google_container'>
                 <button className="btn google_btn" onClick={googleRegister}>
                     <img className='google_logo' src={googleLogo} alt="google-logo" />

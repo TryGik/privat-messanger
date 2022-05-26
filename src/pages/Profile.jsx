@@ -1,11 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Camera from '../components/svg/Camera';
-import defaultAva from '../assets/avatar.jpg';
 import { storage, db, auth } from '../firebase';
 import { uploadBytes, ref, getDownloadURL, deleteObject } from 'firebase/storage';
 import { getDoc, doc, updateDoc } from 'firebase/firestore';
+import Camera from '../components/svg/Camera';
 import Trash from '../components/svg/Trash';
+import defaultAva from '../assets/avatar.jpg';
 
 const Profile = () => {
     const navigation = useNavigate();
@@ -76,7 +76,8 @@ const Profile = () => {
                                 <Camera />
                             </label>
                             {user.avatar ? <Trash deleteImg={deleteImg} /> : null}
-                            <input type="file" accept='image/*' style={{ display: 'none' }} id='photo'
+                            <input type="file" accept='image/*'
+                                style={{ display: 'none' }} id='photo'
                                 onChange={e => setImg(e.target.files[0])} />
                         </div>
                     </div>

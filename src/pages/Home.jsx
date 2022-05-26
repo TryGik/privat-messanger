@@ -1,13 +1,31 @@
 import React from 'react';
-import { collection, query, where, onSnapshot, addDoc, Timestamp, orderBy } from "firebase/firestore";
 import { db, auth, storage } from '../firebase';
-import User from '../components/User';
-import MessageForm from '../components/MessageForm';
+import {
+    collection,
+    query,
+    where,
+    onSnapshot,
+    addDoc,
+    Timestamp,
+    orderBy,
+    setDoc,
+    doc,
+    getDoc,
+    updateDoc
+} from "firebase/firestore";
 import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
+import User from '../components/User';
 import Message from '../components/Message';
+import MessageForm from '../components/MessageForm';
 
 //getDoc use only once, than have to use onSnapshot
 const Home = () => {
+
+    const fn = async (id) => {
+        const docSnap = await getDoc(doc(db, 'users', id))
+        console.log(docSnap.data().uid)
+    }
+    console.log(fn('RC8WvnJh9HOaMblXs4SOvRLPAmU'))
 
     /*const q = query(collection(db, "cities"), where("capital", "==", true));
       const querySnapshot = await getDocs(q);
@@ -38,9 +56,9 @@ const Home = () => {
         });
         return () => unsub();
     }, [])
-    console.log(users);
+    // console.log(users);
 
-    const selectUser = (user) => {
+    const selectUser = async (user) => {
         setUser(user);
         // console.log(user);
 
@@ -55,8 +73,19 @@ const Home = () => {
             });
             setMessages(messages);
         });
+        //'New' message functionality also have trouble whith 2 people, whos start conversation
+        //in this case we get last message beetwen log in user and select user
+        // if (docSnap.data().from !== user1) check exist conv or not
+
+        const docSnap = await getDoc(doc(db, 'lastMessage', id))
+        //if last message exist otherwise we will have error also docSnap.data().from !== user1 message belong to select user
+        if (docSnap.data() && docSnap.data().from !== user1) {
+            await updateDoc(doc(db, 'lastMessage', id), {
+                unread: false,
+            })
+        }
     }
-    console.log(messages);
+    // console.log(messages);
 
     //create messages
     const handleSubmit = async (e) => {
@@ -83,13 +112,29 @@ const Home = () => {
             createdAt: Timestamp.fromDate(new Date()),
             media: url || '',
         })
+        //создаем последнее сообщение in collection can be only 1 last message
+        await setDoc(doc(db, 'lastMessage', id), {
+            text,
+            from: user1,
+            to: user2,
+            createdAt: Timestamp.fromDate(new Date()),
+            media: url || '',
+            unread: true,
+        });
+
         setText('');
     }
 
     return (
         <div className='home_container'>
             <div className="users_container">
-                {users.map(user => <User key={user.uid} user={user} selectUser={selectUser} />)}
+                {users.map(item =>
+                    <User
+                        key={item.uid}
+                        user={item}
+                        selectUser={selectUser}
+                        user1={user1}
+                        chat={user} />)}
             </div>
             <div className="messages_container">
                 {user ?
@@ -98,7 +143,8 @@ const Home = () => {
                             <h3>{user.name}</h3>
                         </div>
                         <div className="messages">
-                            {messages.length ? messages.map((el, i) => <Message key={i} message={el} user1={user1} />) : null}
+                            {messages.length ? messages.map((el, i) =>
+                                <Message key={i} message={el} user1={user1} />) : null}
                         </div>
                         <MessageForm handleSubmit={handleSubmit}
                             text={text}
@@ -116,4 +162,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default Home;

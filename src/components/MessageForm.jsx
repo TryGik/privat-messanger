@@ -1,7 +1,7 @@
 import React from 'react';
 import Attachment from './svg/Attachment';
 
-const Message = ({ handleSubmit, text, setText, setImg }) => {
+const MessageForm = ({ handleSubmit, text, setText, setImg }) => {
     return (
         <form className='message_form' onSubmit={handleSubmit}>
             <label htmlFor="img">
@@ -22,4 +22,4 @@ const Message = ({ handleSubmit, text, setText, setImg }) => {
     )
 }
 
-export default Message; 
+export default MessageForm; 

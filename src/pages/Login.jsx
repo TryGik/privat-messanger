@@ -1,36 +1,34 @@
 import React from 'react';
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { auth, db } from '../firebase';
-import { doc, updateDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import { auth, db } from '../firebase';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import googleLogo from '../assets/google-logo.svg';
 
 const Login = () => {
     const navigation = useNavigate();
 
     //Google
+
     const provider = new GoogleAuthProvider();
     const googleRegister = () => {
         signInWithPopup(auth, provider)
             .then((result) => {
-                updateDoc(doc(db, 'users', result.user.uid), {
-                    isOnline: true
-                })
-                navigation('/');
+                console.log('Result', result)
+                const docSnap = getDoc(doc(db, 'users', result.user.uid));
+                if (docSnap.data()) {
+                    updateDoc(doc(db, 'users', result.user.uid), {
+                        isOnline: true
+                    })
+                    navigation('/');
+                }
+                navigation('/registration');
+                return;
             }).catch((error) => {
-                // Handle Errors here.
-                const errorCode = error.code;
-                alert(errorCode);
-                const errorMessage = error.message;
-                alert(errorMessage);
-                // The email of the user's account used.
-                const email = error.customData.email;
-                alert(email);
-                // The AuthCredential type that was used.
-                const credential = GoogleAuthProvider.credentialFromError(error);
-                alert(credential);
+                alert('Чтобы пользоваться PRIVATE-MSGR через Google аккаунты, сперва зарегистрируйтесь')
             });
     }
+
     //Email & Password
     const [data, setData] = React.useState({
         email: '',

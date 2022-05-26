@@ -1,10 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { signOut } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { AuthContext } from '../context/auth';
-import { useNavigate } from 'react-router-dom';
+
 
 const Navbar = () => {
     const { user } = React.useContext(AuthContext);
@@ -20,18 +20,18 @@ const Navbar = () => {
     return (
         <nav>
             <h3>
-                <Link to="/">Messenger</Link>
+                <Link to="/">PRIVATE-MSGR</Link>
             </h3>
             <div>
                 {user ?
                     <>
-                        <Link to="/profile">Profile</Link>
-                        <button className="btn" onClick={handlerSignOut}>Logout</button>
+                        <Link to="/profile">Профиль</Link>
+                        <button className="btn" onClick={handlerSignOut}>Выйти</button>
                     </>
                     :
                     <>
-                        <Link to='/registration'>Registration</Link>
-                        <Link to='/login'>Login</Link>
+                        <Link to='/registration'>Зарегистрироваться</Link>
+                        <Link to='/login'>Войти</Link>
                     </>
                 }
             </div>
