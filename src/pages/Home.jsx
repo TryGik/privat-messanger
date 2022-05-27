@@ -89,6 +89,7 @@ const Home = () => {
             );
             const snap = await uploadBytes(imgRef, img);
             const dlUrl = await getDownloadURL(ref(storage, snap.ref.fullPath));
+            setImg('');
             url = dlUrl
         }
 
@@ -135,6 +136,7 @@ const Home = () => {
                         </div>
                         <MessageForm handleSubmit={handleSubmit}
                             text={text}
+                            img={img}
                             setText={setText}
                             setImg={setImg}
                         />

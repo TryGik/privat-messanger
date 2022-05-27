@@ -182,6 +182,12 @@ section .form {
   transform: scale(1.05);
 }
 
+.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: auto;
+}
+
 .error {
   text-align: center;
   color: var(--color-5);
@@ -400,6 +406,58 @@ section .form {
   display: none;
 }
 
+/*Google Logo*/
+.google_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.google_logo {
+  width: 30px;
+  height: 30px;
+  transform: translateY(8px);
+}
+
+.google_btn {
+  padding-top: 0;
+}
+
+/*White*/
+
+.white {
+  background-color: #cef;
+  color: rgb(202, 97, 22);
+}
+
+/*Emoji*/
+.picker-container {
+  position: relative;
+}
+
+.emoji-categories {
+  background-color: #333;
+}
+
+.emoji-picker-react {
+  position: absolute !important;
+  width: 300px !important;
+  top: -345px;
+  left: 58px;
+}
+
+.emoji-search {
+  display: none;
+}
+
+.skin-tones-list {
+  display: none;
+}
+
+.emoji-scroll-wrapper {
+  margin-top: 35px;
+}
+
 @media screen and (max-width: 767px) {
   .home_container {
     grid-template-columns: 2fr 3fr;
@@ -423,6 +481,14 @@ section .form {
   .message_form .btn {
     margin: 0px 5px;
     padding: 8px 7px;
+  }
+
+  .emoji-picker-react {
+    width: 200px !important;
+  }
+
+  .emoji-categories {
+    height: 30px;
   }
 
 }
@@ -467,28 +533,20 @@ section .form {
     width: 35px;
     height: 35px;
   }
-}
 
-/*Google Logo*/
-.google_container {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-}
+  .message_form .btn {
+    font-size: 10px;
+  }
 
-.google_logo {
-  width: 30px;
-  height: 30px;
-  transform: translateY(8px);
-}
+  .emoji-picker-react {
+    width: 150px !important;
+    height: 170px !important;
+    top: -185px;
+    left: 35px;
+  }
 
-.google_btn {
-  padding-top: 0;
-}
+  .emoji-categories {
+    height: 20px;
+  }
 
-/*White*/
-
-.white {
-  background-color: #cef;
-  color: rgb(202, 97, 22);
 }
