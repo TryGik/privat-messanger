@@ -11,7 +11,9 @@ import {
     setDoc,
     doc,
     getDoc,
-    updateDoc
+    updateDoc,
+    deleteDoc,
+    getDocs
 } from "firebase/firestore";
 import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
 import User from '../components/User';
@@ -25,6 +27,7 @@ const Home = () => {
     const [img, setImg] = React.useState('');
     const [messages, setMessages] = React.useState([]);
     const [bg, setBg] = React.useState(false);
+    const [deleteId, setDeleteId] = React.useState('')
 
     const user1 = auth.currentUser.uid;
 
@@ -56,10 +59,10 @@ const Home = () => {
 
     const selectUser = async (user) => {
         setUser(user);
-
         const user2 = user.uid
         const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
         const messagesRef = collection(db, 'messages', id, 'chat');
+        setDeleteId(id);
         const q = query(messagesRef, orderBy('createdAt', 'asc'));
         onSnapshot(q, querySnapshot => {
             let messages = [];
@@ -113,6 +116,23 @@ const Home = () => {
         setText('');
     }
 
+    const deleteChat = async (e) => {
+        e.stopPropagation()
+        const user2 = user.uid;
+        const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
+        const q = query(collection(db, "messages", deleteId, 'chat'));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((el) => {
+            deleteDoc(doc(db, "messages", id, 'chat', el.id));
+        });
+
+        setDoc(doc(db, 'lastMessage', id), {
+            text: 'очищено',
+            unread: false,
+        });
+        setText('');
+    }
+
     return (
         <div className={`home_container ${bg ? 'white' : ''}`}>
             <div className="users_container">
@@ -122,7 +142,9 @@ const Home = () => {
                         user={item}
                         selectUser={selectUser}
                         user1={user1}
-                        chat={user} />)}
+                        chat={user}
+                        deleteChat={deleteChat}
+                    />)}
             </div>
             <div className="messages_container">
                 {user ?

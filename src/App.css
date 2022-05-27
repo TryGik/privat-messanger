@@ -188,6 +188,12 @@ section .form {
   cursor: auto;
 }
 
+.clear_icon {
+  width: 25px;
+  height: 25px;
+  margin-right: 5px;
+}
+
 .error {
   text-align: center;
   color: var(--color-5);
