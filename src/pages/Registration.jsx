@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { setDoc, doc, Timestamp } from 'firebase/firestore';
-// import googleLogo from '../assets/google-logo.svg';
 
 const Registration = () => {
     const navigation = useNavigate();
@@ -37,7 +36,8 @@ const Registration = () => {
                 name,
                 email,
                 createdAt: Timestamp.fromDate(new Date()),
-                isOnline: true
+                isOnline: true,
+                sun: false
             });
             setData({ name: '', email: '', password: '', error: null, loading: false })
             navigation('/');

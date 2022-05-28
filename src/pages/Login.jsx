@@ -18,7 +18,8 @@ const Login = () => {
                     name: result.user.displayName,
                     email: result.user.email,
                     createdAt: Timestamp.fromDate(new Date()),
-                    isOnline: true
+                    isOnline: true,
+                    sun: false
                 })
                 navigation('/');
             }).catch((error) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { signOut } from 'firebase/auth';
-import { doc, updateDoc, setDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { AuthContext } from '../context/auth';
 import Sun from './svg/Sun';
 import Moon from './svg/Moon';
@@ -12,18 +12,15 @@ import { HOME_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE, REGISTER_ROUTE } from '../utils
 const Navbar = () => {
     const { user } = React.useContext(AuthContext);
     const navigation = useNavigate();
-    const [sun, setSun] = React.useState(false)
+    const [sun, setSun] = React.useState(false);
 
-    //фономенялка
+    //фономенялка 
     const changeBackground = async () => {
-        const id = 'bg-for-per';
-        await setDoc(doc(db, 'background', id), {
-            sun: sun,
-        });
-        await updateDoc(doc(db, 'background', id), {
+        await updateDoc(doc(db, 'users', user.uid), {
             sun: !sun,
         });
         setSun(!sun);
+        console.log(sun)
     }
 
     const handlerSignOut = async () => {

@@ -32,14 +32,16 @@ const Home = () => {
     const user1 = auth.currentUser.uid;
 
     React.useEffect(() => {
-        const backgroundRef = collection(db, 'background');
-        const q = query(backgroundRef)
+        const userRef = collection(db, 'users');
+        const q = query(userRef)
         const unsub = onSnapshot(q, querySnapshot => {
             let bg;
             querySnapshot.forEach((doc) => {
-                bg = doc.data().sun;
+                if (user1 === doc.data().uid) {
+                    bg = doc.data().sun;
+                }
             });
-            setBg(bg);
+            setBg(bg || false);
         });
         return () => unsub();
     }, [])

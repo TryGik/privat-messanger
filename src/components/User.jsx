@@ -37,7 +37,6 @@ const User = ({ user, selectUser, user1, chat, deleteChat }) => {
                     }
                     <div className={`user_status ${user.isOnline ? 'online' : 'offline'}`}></div>
                 </div>
-
             </div>
             {data && (
                 <p style={{ textAlign: 'center' }}
